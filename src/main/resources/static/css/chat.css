@@ -1,0 +1,25 @@
+.container {
+  width: 970px !important;
+}
+
+.navbar h1 {
+	margin-top: 15px;
+	font-size: 22px;
+	float:left;
+	color: #fff;
+}
+
+.chat-box {
+	height:400px;
+	overflow: auto;
+}
+
+.login-page {
+	padding: 38px 38px;
+	position: relative;
+}
+
+.login-container {
+	min-height: 473px;
+	padding: 123px 199px 33px 306px;
+}

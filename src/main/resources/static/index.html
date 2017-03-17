@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Spring WebSocket Chat Prototype</title>
+
+    <!-- Loading Bootstrap -->
+    <link href="lib/flat-ui/dist/css/vendor/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="lib/flat-ui/dist/css/flat-ui.css" rel="stylesheet">
+
+    <link href="css/chat.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="login-page">
+        <div class="login-container">
+            <div class="login-icon">
+                <h4>Welcome to
+                    <small>Spring WebSocket Chat</small>
+                </h4>
+            </div>
+
+            <div class="login-form">
+                <form method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control login-field" name="username" id="login-name"/>
+                        <label class="login-field-icon fui-user" for="login-name"> username</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control login-field" name="password" id="login-pass"/>
+                        <label class="login-field-icon fui-lock" for="login-pass"> password</label>
+                    </div>
+
+                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Log In"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
