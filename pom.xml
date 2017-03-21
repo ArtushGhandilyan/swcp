@@ -13,11 +13,15 @@
     <artifactId>spring-websocket-chat-prototype</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <appengine.maven.plugin>1.0.0</appengine.maven.plugin>
+
+        <app.deploy.stopPreviousVersion>false</app.deploy.stopPreviousVersion>
+        <app.deploy.version>reconnecting</app.deploy.version>
     </properties>
 
     <dependencies>
@@ -115,6 +119,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>${appengine.maven.plugin}</version>
             </plugin>
         </plugins>
     </build>

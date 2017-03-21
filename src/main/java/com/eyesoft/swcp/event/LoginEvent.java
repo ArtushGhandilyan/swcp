@@ -4,11 +4,13 @@ import java.util.Date;
 
 public class LoginEvent {
 
+    private String sessionId;
     private String username;
     private Date time;
 
-    public LoginEvent(String username) {
+    public LoginEvent(String username, String sessionId) {
         this.username = username;
+        this.sessionId = sessionId;
         time = new Date();
     }
 
@@ -26,5 +28,13 @@ public class LoginEvent {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

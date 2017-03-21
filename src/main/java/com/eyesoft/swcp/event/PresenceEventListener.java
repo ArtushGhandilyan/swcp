@@ -34,7 +34,7 @@ public class PresenceEventListener {
 		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
 		String username = headers.getUser().getName();
 
-		LoginEvent loginEvent = new LoginEvent(username);
+		LoginEvent loginEvent = new LoginEvent(username, headers.getSessionId());
 		messagingTemplate.convertAndSend(loginDestination, loginEvent);
 		
 		// We store the session as we need to be idempotent in the disconnect event processing
@@ -46,7 +46,7 @@ public class PresenceEventListener {
 		
 		Optional.ofNullable(participantRepository.getParticipant(event.getSessionId()))
 				.ifPresent(login -> {
-					messagingTemplate.convertAndSend(logoutDestination, new LogoutEvent(login.getUsername()));
+					messagingTemplate.convertAndSend(logoutDestination, new LogoutEvent(login.getUsername(), event.getSessionId()));
 					participantRepository.removeParticipant(event.getSessionId());
 				});
 	}

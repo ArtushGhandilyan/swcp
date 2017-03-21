@@ -24,7 +24,7 @@
         initStompClient();
 
         function initStompClient() {
-            chatService.init('/swcp/ws');
+            chatService.init();
 
             chatService.connect(function(frame) {
 
@@ -35,13 +35,13 @@
                 });
 
                 chatService.subscribe("/topic/chat.login", function(message) {
-                    self.participants.unshift({username: JSON.parse(message.body).username, typing : false});
+                    self.participants.unshift({username: JSON.parse(message.body).username, sessionId: JSON.parse(message.body).sessionId, typing : false});
                 });
 
                 chatService.subscribe("/topic/chat.logout", function(message) {
-                    var username = JSON.parse(message.body).username;
+                    var sessionId = JSON.parse(message.body).sessionId;
                     for(var index in self.participants) {
-                        if(self.participants[index].username == username) {
+                        if(self.participants[index].sessionId == sessionId) {
                             self.participants.splice(index, 1);
                         }
                     }
