@@ -10,10 +10,16 @@
     <link href="lib/angularjs-toaster/toaster.css" rel="stylesheet">
 
     <link href="css/chat.css" rel="stylesheet">
+
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container" ng-controller="ChatController as vc">
+<div class="container" ng-controller="FBChatController as vc">
     <toaster-container></toaster-container>
 
     <div class="row">
@@ -21,8 +27,7 @@
             <div class="collapse navbar-collapse" id="navbar-collapse-01">
                 <h1>Spring WebSocket Chat Prototype</h1>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="javascript:void(0)" ng-click="vc.test()">Send 200msg</a></li>
-                    <li><a href="websocketstats" target="_blank">Stats</a></li>
+                    <li><a href="javascript:void(0)" ng-click="vc.test()">Test</a></li>
                     <li><a href="logout">Logout ({{vc.username}})</a></li>
                 </ul>
             </div>
@@ -30,11 +35,12 @@
     </div>
     <div class="row">
         <div class="col-xs-4">
+            <h4>Messages [{{vc.messages.length}}]</h4>
             <h4>Participants [{{vc.participants.length}}]</h4>
             <div class="share">
                 <ul ng-repeat="participant in vc.participants">
                     <li>
-                        <span class="input-icon fui-new" ng-show="participant.typing"></span>
+                        <span class="input-icon fui-new" ng-show="participant.typing && participant.username != self.username"></span>
                         <span class="input-icon fui-user" ng-show="!participant.typing"></span>
                         <a href="" ng-click="vc.privateSending(participant.username)">{{participant.username}}</a>
 
@@ -44,8 +50,8 @@
         </div>
         <div class="col-xs-8 chat-box">
             <h4>Messages</h4>
-            <div ng-repeat="message in vc.messages">
-                <small print-message></small>
+            <div ng-repeat="message in vc.messages | orderBy:'timestamp':true | limitTo: 600">
+                <small print-firebase-message></small>
             </div>
         </div>
     </div>
@@ -58,7 +64,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- 3rd party -->
 <script src="lib/firebase/firebase.js"></script>
@@ -84,7 +89,10 @@
 <!-- App -->
 <script src="js/chat.module.js"></script>
 <script src="js/chat.controller.js"></script>
+<script src="js/firebase/chat.controller.js"></script>
+<script src="js/firebase/firebase.service.js"></script>
+<script src="js/auth.service.js"></script>
 <script src="js/chat.service.js"></script>
-<script src="js/print-message.directive.js"></script>
+<script src="js/firebase/print-firebase-message.directive.js"></script>
 </body>
 </html>

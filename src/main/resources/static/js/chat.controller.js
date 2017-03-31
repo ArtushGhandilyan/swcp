@@ -21,6 +21,8 @@
         self.stopTyping = stopTyping;
         self.privateSending = privateSending;
 
+        self.test = test;
+
         initStompClient();
 
         function initStompClient() {
@@ -62,7 +64,7 @@
 
                 chatService.subscribe("/topic/chat.message", function(message) {
                     self.messages.unshift(JSON.parse(message.body));
-                });
+                }, {'durable': true, 'auto-delete': false});
 
                 chatService.subscribe("/user/queue/chat.message", function(message) {
                     var parsed = JSON.parse(message.body);
@@ -114,6 +116,19 @@
 
         function privateSending(username) {
             self.sendTo = (username != self.sendTo) ? username : 'everyone';
+        }
+
+        function test() {
+            if(self.sendTo != "everyone") {
+                for(var i = 0; i < 200; i++) {
+                    chatService.send("/app/chat.private." + self.sendTo, {persistent:true}, JSON.stringify({message: i+1}));
+                    self.messages.unshift({message: i+1, username: 'you', priv: true, to: self.sendTo});
+                }
+            } else {
+                for(var i = 0; i < 200; i++) {
+                    chatService.send("/app/chat.message", {persistent:true}, JSON.stringify({message: i+1}));
+                }
+            }
         }
     }
 

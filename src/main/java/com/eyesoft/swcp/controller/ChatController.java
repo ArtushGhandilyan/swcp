@@ -4,13 +4,19 @@ import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.google.firebase.auth.FirebaseAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 
 import com.eyesoft.swcp.model.ChatMessage;
@@ -19,6 +25,8 @@ import com.eyesoft.swcp.event.LoginEvent;
 import com.eyesoft.swcp.event.ParticipantRepository;
 import com.eyesoft.swcp.exception.TooMuchProfanityException;
 import com.eyesoft.swcp.util.ProfanityChecker;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Controller that handles WebSocket chat messages
@@ -40,6 +48,20 @@ public class ChatController {
         this.profanity = profanity;
         this.participantRepository = participantRepository;
         this.simpMessagingTemplate = simpMessagingTemplate;
+    }
+
+    @SubscribeMapping("/firebase.credentials")
+    public void getCredentials(SimpMessageHeaderAccessor headerAccessor) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String sessionId = headerAccessor.getSessionId();
+
+        FirebaseAuth.getInstance().createCustomToken(user.getUsername())
+                .addOnSuccessListener(customToken -> {
+                    Map<String, String> payload = new HashMap<>();
+                    payload.put("customToken", customToken);
+                    payload.put("sessionId", sessionId);
+                    this.simpMessagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/firebase.credentials", payload);
+                });
     }
 
     @SubscribeMapping("/chat.participants")

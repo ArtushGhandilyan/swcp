@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
 
 @Configuration
 @EnableWebSecurity
@@ -60,9 +61,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
 
                 List<GrantedAuthority> authorities = SECURE_ADMIN_PASSWORDS.contains(token.getCredentials()) ?
-                        AuthorityUtils.createAuthorityList("ROLE_ADMIN") : null;
+                        AuthorityUtils.createAuthorityList("ROLE_ADMIN") : AuthorityUtils.createAuthorityList("ROLE_USER");
 
-                return new UsernamePasswordAuthenticationToken(token.getName(), token.getCredentials(), authorities);
+                User user = new User(token.getName(), (String) token.getCredentials(), authorities);
+                return new UsernamePasswordAuthenticationToken(user, token.getCredentials(), authorities);
             }
         });
     }

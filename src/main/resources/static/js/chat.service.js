@@ -54,12 +54,12 @@
             });
         }
 
-        function subscribe(destination, callback) {
+        function subscribe(destination, callback, headers) {
             stompClient.subscribe(destination, function (message) {
                 $rootScope.$apply(function () {
                     callback(message);
                 });
-            });
+            }, headers);
         }
 
         function send(destination, headers, object) {
